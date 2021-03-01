@@ -2,7 +2,8 @@
 #include <string>
 #include <fstream>
 #include <iomanip>
-#define CHARCOUNT 20
+#include <vector>
+#define CHARCOUNT 100 //Maksimalus kavų kiekis 
 using namespace std;
 
 class Kava
@@ -14,7 +15,8 @@ private: //Apibrėžia kintamuosius
     double doubleKaina, doubleSvoris;
 
 public:
-    Kava() {  //Nunulina reikšmes
+    Kava() 
+    {  //Nunulina reikšmes
         StrPavadinimas = "";
         StrRusis = "";
         StrGamintojas = "";
@@ -38,39 +40,39 @@ public:
 
         
 
-        ofstream KAVA("kava.txt");
-        string StrP[n];
-        string StrR[n];
-        string StrG[n];
-        double doubleK[n];
-        double doubleS[n];
+        fstream KAVA("kava.txt");
+        vector <string> StrP (n);
+        vector <string> StrR (n);
+        vector <string> StrG (n);
+        vector <double> doubleK (n);
+        vector <double> doubleS (n);
 
 
         for (int i = 0; i < n; i++)
         {
-
-            cout << n << "  " << i << "\n";
             cout << "Įveskite " << i + 1 << " kavos pavadinimą: ";
             cin >> StrP[i];
-            KAVA << i + 1 << " " << StrP[i];
-            cout << std::endl;
+            KAVA << StrP[i];
+            cout << endl;
 
             cout << "Įveskite " << i + 1 << " kavos rušį: ";
             cin >> StrR[i];
             KAVA << " " << StrR[i] << " ";
-            cout << std::endl;
+            cout << endl;
 
             cout << "Įveskite " << i + 1 << " kavos gamintoją: ";
             cin >> StrG[i];
-            KAVA << StrG[i];
-            cout << std::endl;
+            KAVA << StrG[i] << " ";
+            cout << endl;
 
             cout << "Įveskite "<< i+1 << " kavos kainą: ";
             cin >> doubleK[i];
+            KAVA << doubleK[i] << " ";
             cout <<  endl;
 
             cout << "Įveskite "<< i+1 << " kavos svorį: ";
             cin >> doubleS[i];
+            KAVA << doubleS[i];
             cout <<  endl;
 
             if (n != i + 1)
@@ -78,22 +80,18 @@ public:
                 KAVA << "\n";
             }
         }
-
         KAVA.close();
     }
 
     void atspauzdintiFaila(int n)
     {
-        ifstream KAVA("kava.txt");
+        fstream KAVA("kava.txt");
         for (int i = 0; i <= n; i++)
         {
-
-            cout << StrPavadinimas << "\t" << StrRusis << "\t" << StrGamintojas << "\t";
-            // doubleKaina << "\t" << doubleSvoris;
+            cout << StrPavadinimas << "\t" << StrRusis << "\t" << StrGamintojas << "\t" << doubleKaina << "\t" << doubleSvoris;
         }
+        KAVA.close();
     }
-
-
     void set_pavadinimas(string StrP) { StrPavadinimas = StrP; }
     void set_rusis(string StrR) { StrRusis = StrR; }
     void set_gamintojas(string StrG) { StrGamintojas = StrG; }
@@ -104,7 +102,6 @@ public:
     string get_gamintojas() { return StrGamintojas; }
     double get_kaina() { return doubleKaina; }
     double get_svoris() { return doubleSvoris; }
-    //double vidurkis() {return ((doubleKa;}
 
 };
 
@@ -115,16 +112,17 @@ private:
     Kava K[CHARCOUNT];
 public:
 
-    Kava f(string vardas)
+    KavosSarasas(string vardas)
 
     {
         n = 0;
         string StrP, StrR, StrG;
         int doubleK, doubleS;
-        ifstream f(vardas);
+        fstream f(vardas);
         if (f.fail())
         {
-            cout << "Nera failo";
+            cout << "Nera failo\n";
+
         }
         else
         {
@@ -137,7 +135,7 @@ public:
             }
         }
         f.close();
-    };
+    }
     void BendrasVidurkis()
     {
         double x = 0;
@@ -151,28 +149,32 @@ public:
 int main()
 {
     int n;
-    Kava Kava;
-    //KavosSarasas KAVAS;
-    ifstream KAVA;
+    Kava Ka;
+    fstream KAVA;
+    
     KAVA.open("kava.txt", ios::in);
-    if (KAVA)
+    if (KAVA.fail())
     {
-        //KAVA.vidurkis();
+        cout << "Įveskite kelias skirtingas kavas norite įtraukti į sarašą: ";
+        cin >> n;
+        cout << endl;
+        
+        KAVA.open("kava.txt", ios::out);
+        Ka.SukurtiDuomenis(n);
+        KAVA.close();
+        KAVA.clear();
+        KAVA.open("kava.txt", ios::in);
+         
+        Ka.atspauzdintiFaila(n);
 
     }
 
     else
     {
-
-        cout << "Įveskite kelias skirtingas kavas norite įtraukti į sarašą: ";
-        cin >> n;
-        cout << endl;
-
-        KAVA.open("kava.txt", ios::out);
-
-        Kava.SukurtiDuomenis(n);
-        Kava.atspauzdintiFaila(n);
-
+     KavosSarasas KavosSarasas("kava.txt");
+     KAVA.close();
+     KAVA.clear();
+     KavosSarasas.BendrasVidurkis();
     }
 
 }
